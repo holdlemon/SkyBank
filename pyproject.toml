@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "skybank"
+version = "0.1.0"
+description = ""
+authors = ["daniil vazhov <d.vajov2010@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.32.3"
+python-dotenv = "^1.0.1"
+pandas = "^2.2.2"
+openpyxl = "^3.1.5"
+xlrd = "^2.0.1"
+
+
+[tool.poetry.group.lint.dependencies]
+mypy = "^1.10.1"
+flake8 = "^7.1.0"
+black = "^24.4.2"
+isort = "^5.13.2"
+types-requests = "^2.32.0.20240622"
+pandas-stubs = "^2.2.2.240603"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+pytest-cov = "^5.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+disallow_untyped_defs=true
+warn_return_any=true
+
+[tool.black]
+line-length = 119
+
+[tool.isort]
+line_length = 119
