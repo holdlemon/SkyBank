@@ -1,4 +1,6 @@
 import json
+import logging
+import os
 from datetime import datetime
 from typing import Dict, List
 
@@ -7,8 +9,24 @@ import pandas as pd
 from src.utils import filtered_data_by_date, get_currency_stocks, get_exchange_rate
 
 
+project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+log_dir = os.path.join(project_dir, 'logs')
+
+# Создаем каталог logs, если он не существует
+os.makedirs(log_dir, exist_ok=True)
+
+# Настройка логирования
+logger = logging.getLogger("views.py")
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler(os.path.join(log_dir, 'views.log'), mode="w")
+file_formater = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s: %(message)s")
+file_handler.setFormatter(file_formater)
+logger.addHandler(file_handler)
+
+
 def get_greeting(date_time: str) -> str:
     """ Приветствие в зависимости от времени суток """
+    logger.info("Получаем дату и конвертируем в формат datetime")
     formatted_date = datetime.strptime(date_time, "%Y-%m-%d %H:%M:%S")
     hour = formatted_date.hour
     if 4 <= hour < 12:
@@ -19,7 +37,7 @@ def get_greeting(date_time: str) -> str:
         greeting_message = "Добрый вечер"
     else:
         greeting_message = "Доброй ночи"
-
+    logger.info("Приветствие в зависимости от времени суток")
     return greeting_message
 
 
@@ -35,6 +53,7 @@ def card_information(transactions: pd.DataFrame) -> list[dict]:
             "cashback": abs(round(total_spent / 100, 2))
         }
         )
+    logger.info("Выводим сумму операций и кэшбека по картам")
     return result
 
 
@@ -50,6 +69,7 @@ def get_top_five_transactions(transactions: pd.DataFrame) -> List[Dict]:
             "description": transact["Описание"]
         }
         )
+    logger.info("Выводим ТОП-5 транзакций по сумме платежа")
     return result
 
 
