@@ -6,7 +6,7 @@ from src.services import find_transactions_with_phone_numbers
 
 # Фикстура для подготовки тестовых данных
 @pytest.fixture
-def sample_data():
+def sample_data(tmp_path):
     data = {
         "Описание": [
             "Покупка +7 123 456-78-90",
@@ -16,8 +16,9 @@ def sample_data():
         ]
     }
     df = pd.DataFrame(data)
-    df.to_excel("test_data.xlsx", index=False, engine='openpyxl')
-    return "test_data.xlsx"
+    file_path = tmp_path / "test_data.xlsx"
+    df.to_excel(file_path, index=False, engine='openpyxl')
+    return file_path
 
 
 # Тест для функции find_transactions_with_phone_numbers
@@ -28,11 +29,11 @@ def test_find_transactions_with_phone_numbers(sample_data):
         "Оплата +7 987 654-32-10",
         "Телефон +7 111 222-33-44"
     ], ensure_ascii=False, indent=4)
-    assert result == expected
+    assert json.loads(result) == json.loads(expected)
 
 
 # Тест для случая, когда в данных нет номеров телефонов
-def test_find_transactions_with_phone_numbers_no_phones():
+def test_find_transactions_with_phone_numbers_no_phones(tmp_path):
     data = {
         "Описание": [
             "Перевод без номера",
@@ -40,19 +41,21 @@ def test_find_transactions_with_phone_numbers_no_phones():
         ]
     }
     df = pd.DataFrame(data)
-    df.to_excel("test_data_no_phones.xlsx", index=False, engine='openpyxl')
-    result = find_transactions_with_phone_numbers("test_data_no_phones.xlsx")
+    file_path = tmp_path / "test_data_no_phones.xlsx"
+    df.to_excel(file_path, index=False, engine='openpyxl')
+    result = find_transactions_with_phone_numbers(file_path)
     expected = json.dumps([], ensure_ascii=False, indent=4)
-    assert result == expected
+    assert json.loads(result) == json.loads(expected)
 
 
 # Тест для случая, когда данные пусты
-def test_find_transactions_with_phone_numbers_empty_data():
+def test_find_transactions_with_phone_numbers_empty_data(tmp_path):
     data = {
         "Описание": []
     }
     df = pd.DataFrame(data)
-    df.to_excel("test_data_empty.xlsx", index=False, engine='openpyxl')
-    result = find_transactions_with_phone_numbers("test_data_empty.xlsx")
+    file_path = tmp_path / "test_data_empty.xlsx"
+    df.to_excel(file_path, index=False, engine='openpyxl')
+    result = find_transactions_with_phone_numbers(file_path)
     expected = json.dumps([], ensure_ascii=False, indent=4)
-    assert result == expected
+    assert json.loads(result) == json.loads(expected)

@@ -1,8 +1,6 @@
-import datetime as dt
-
 import pandas as pd
 
-from src.reports import spending_by_category, get_transactions
+from src.reports import get_transactions, spending_by_category
 from src.services import find_transactions_with_phone_numbers
 from src.utils import filtered_data_by_date, get_currency_stocks, get_exchange_rate
 from src.views import get_main_page_data
@@ -70,14 +68,17 @@ def user_func(transactions: pd.DataFrame) -> None:
             while True:
                 try:
                     category = input("Введите категорию: ")
-                    date = input("Введите дату в формате ДД.ММ.ГГГГ или пропустите ввод для принятия текущей даты: ")
+                    date = input("Введите дату в формате ГГГГ-ММ-ДД или пропустите ввод для принятия текущей даты: ")
+                    path = "../data/operations.xls"
                     if date == "":
                         date = "2021-12-31"
-                        path = "../data/operations.xls"
+                        result = get_transactions(path)
+                        print(spending_by_category(result, category, date))
+                    else:
                         result = get_transactions(path)
                         print(spending_by_category(result, category, date))
 
-                    print("Данные сохранены в файл reports/spending_by_category.xlsx")
+                    print("Данные сохранены в файл data/spending_by_category.xlsx")
                     break
                 except Exception as ex:
                     print(f"Ошибка: {ex}")

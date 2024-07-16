@@ -8,7 +8,6 @@ import requests
 import yfinance as yf
 from dotenv import load_dotenv
 
-
 project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 log_dir = os.path.join(project_dir, 'logs')
 
@@ -47,16 +46,16 @@ def get_currency_stocks(path: str, target_currency: str = "RUB") -> list[dict]:
     logger.info("Открываем файл с пользовательскими настройками и выбираем валюту для конвертации")
     with open(path, "r") as f:
         result = json.load(f)
-        for currency in result["user_currencies"]:
-            url = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/{currency}"
-            response = requests.get(url)
-            if response.status_code == 200:
-                data = response.json()
-                price = data["conversion_rates"][target_currency]
-                stock_prices.append({"currency": currency, "rate": round(price, 2)})
-            else:
-                logger.error("Ошибка запроса на конвертацию валюты")
-                raise Exception(f"Ошибка запроса {response.status_code}")
+    for currency in result["user_currencies"]:
+        url = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/{currency}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            price = data["conversion_rates"][target_currency]
+            stock_prices.append({"currency": currency, "rate": round(price, 2)})
+        else:
+            logger.error("Ошибка запроса на конвертацию валюты")
+            raise Exception(f"Ошибка запроса {response.status_code}")
     logger.info("Данные по валютам успешно получены")
     return stock_prices
 
@@ -67,12 +66,12 @@ def get_exchange_rate(path: str) -> list[dict]:
     logger.info("Открываем файл с пользовательскими настройками и выбираем акции для отображения курса")
     with open(path, "r") as f:
         result = json.load(f)
-        for ticker in result["user_stocks"]:
-            stock = yf.Ticker(ticker)
-            data = stock.history(period="1d")
-            if not data.empty:
-                price = data['Close'].iloc[0]
-                stock_prices.append({"stock": ticker, "price": round(price, 2)})
+    for ticker in result["user_stocks"]:
+        stock = yf.Ticker(ticker)
+        data = stock.history(period="1d")
+        if not data.empty:
+            price = data['Close'].iloc[0]
+            stock_prices.append({"stock": ticker, "price": round(price, 2)})
     logger.info("Данные по акциям успешно получены")
     return stock_prices
 

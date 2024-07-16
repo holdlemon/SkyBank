@@ -6,7 +6,6 @@ from typing import Any, Callable, Optional
 
 import pandas as pd
 
-
 project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 log_dir = os.path.join(project_dir, 'logs')
 

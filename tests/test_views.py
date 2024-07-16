@@ -21,11 +21,14 @@ def sample_transactions():
 
 
 # Тест для функции get_greeting
-def test_get_greeting():
-    assert get_greeting("2021-12-21 12:00:00") == "Добрый день"
-    assert get_greeting("2021-12-21 08:00:00") == "Доброе утро"
-    assert get_greeting("2021-12-21 20:00:00") == "Добрый вечер"
-    assert get_greeting("2021-12-21 02:00:00") == "Доброй ночи"
+@pytest.mark.parametrize("input_time, expected_greeting", [
+    ("2021-12-21 12:00:00", "Добрый день"),
+    ("2021-12-21 08:00:00", "Доброе утро"),
+    ("2021-12-21 20:00:00", "Добрый вечер"),
+    ("2021-12-21 02:00:00", "Доброй ночи")
+])
+def test_get_greeting(input_time, expected_greeting):
+    assert get_greeting(input_time) == expected_greeting
 
 
 # Тест для функции card_information

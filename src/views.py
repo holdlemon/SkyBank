@@ -8,7 +8,6 @@ import pandas as pd
 
 from src.utils import filtered_data_by_date, get_currency_stocks, get_exchange_rate
 
-
 project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 log_dir = os.path.join(project_dir, 'logs')
 
